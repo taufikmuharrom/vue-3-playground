@@ -1,0 +1,68 @@
+<script setup>
+import { Background } from "@vue-flow/background";
+import { VueFlow, useVueFlow } from "@vue-flow/core";
+import { ref } from "vue";
+
+const elements = ref([
+  {
+    id: "1",
+    type: "input",
+    label: "Node A-1",
+    type: "custom",
+    position: { x: 250, y: 0 },
+  },
+  {
+    id: "2",
+    label: "Node A-2",
+    position: { x: 100, y: 100 },
+  },
+  {
+    id: "3",
+    label: "Node A-3",
+    position: { x: 400, y: 100 },
+    style: {
+      background: "#D6D5E6",
+      color: "#333",
+      border: "1px solid #222138",
+      width: 180,
+    },
+  },
+  { id: "e1-2", source: "1", target: "2", updatable: true },
+]);
+
+const { updateEdge, addEdges } = useVueFlow();
+
+function onEdgeUpdateStart(edge) {
+  return console.log("start update", edge);
+}
+
+function onEdgeUpdateEnd(edge) {
+  return console.log("end update", edge);
+}
+
+function onEdgeUpdate({ edge, connection }) {
+  return updateEdge(edge, connection);
+}
+
+function onConnect(params) {
+  console.log(params);
+  return addEdges([params]);
+}
+</script>
+
+<template>
+  <VueFlow
+    v-model="elements"
+    fit-view-on-init
+    @edge-update="onEdgeUpdate"
+    @connect="onConnect"
+    @edge-update-start="onEdgeUpdateStart"
+    @edge-update-end="onEdgeUpdateEnd"
+  >
+    <Background />
+
+    <!-- <template #edge-custom="props">
+      <Input />
+    </template> -->
+  </VueFlow>
+</template>
